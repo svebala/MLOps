@@ -18,7 +18,7 @@ import mlflow
 mlflow.set_tracking_uri("http://localhost:5000")
 mlflow.set_experiment("mlops-tourism-pkg-purchase")
 
-api = HfApi()
+api = HfApi(token=os.getenv("HF_TOKEN"))
 
 Xtrain_path = "hf://datasets/BalaSVenkat/tourism-package-dataset/Xtrain.csv"
 Xtest_path = "hf://datasets/BalaSVenkat/tourism-package-dataset/Xtest.csv"
@@ -92,8 +92,8 @@ xgb_model = xgb.XGBClassifier(scale_pos_weight=class_weight, random_state=42)
 
 # Define hyperparameter grid
 param_grid = {
-    'xgbclassifier__n_estimators':,    # number of tree to build
-    'xgbclassifier__max_depth':,    # maximum depth of each tree
+    'xgbclassifier__n_estimators': [100, 200, 300],    # number of tree to build
+    'xgbclassifier__max_depth': [3, 5, 7],    # maximum depth of each tree
     'xgbclassifier__colsample_bytree': [0.4, 0.5, 0.6],    # percentage of attributes to be considered (randomly) for each tree
     'xgbclassifier__colsample_bylevel': [0.4, 0.5, 0.6],    # percentage of attributes to be considered (randomly) for each level of a tree
     'xgbclassifier__learning_rate': [0.01, 0.05, 0.1],    # learning rate
@@ -163,14 +163,14 @@ with mlflow.start_run():
     repo_id = "BalaSVenkat/tourism-package-model"
     repo_type = "model"
 
-    # Check if the space exists
+    # Check if the model exists
     try:
         api.repo_info(repo_id=repo_id, repo_type=repo_type)
-        print(f"Space '{repo_id}' already exists. Using it.")
+        print(f"Model '{repo_id}' already exists. Using it.")
     except RepositoryNotFoundError:
-        print(f"Space '{repo_id}' not found. Creating new space...")
+        print(f"Model '{repo_id}' not found. Creating new model...")
         create_repo(repo_id=repo_id, repo_type=repo_type, private=False)
-        print(f"Space '{repo_id}' created.")
+        print(f"Model '{repo_id}' created.")
 
     # create_repo("churn-model", repo_type="model", private=False)
     api.upload_file(
