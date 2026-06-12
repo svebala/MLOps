@@ -1,10 +1,14 @@
+
 # for data manipulation
 import pandas as pd
 import sklearn
+
 # for creating a folder
 import os
+
 # for data preprocessing and pipeline creation
 from sklearn.model_selection import train_test_split
+
 # for hugging face space authentication to upload files
 from huggingface_hub import login, HfApi
 
@@ -13,6 +17,15 @@ api = HfApi(token=os.getenv("HF_TOKEN"))
 DATASET_PATH = "hf://datasets/BalaSVenkat/tourism-package-dataset/tourism.csv"
 tourism_dataset = pd.read_csv(DATASET_PATH)
 print("Dataset loaded successfully.")
+
+# Remove unwanted columns
+unwanted_cols = ["Unnamed: 0", "CustomerID"]
+tourism_dataset = tourism_dataset.drop(columns=unwanted_cols,errors="ignore")
+print(f"Dataset shape after dropping columns: {tourism_dataset.shape}")
+
+# Remove duplicate records
+tourism_dataset = tourism_dataset.drop_duplicates().reset_index(drop=True)
+print(f"Dataset shape after duplicate removals: {tourism_dataset.shape}")
 
 # Define the target variable for the classification task
 target = 'ProdTaken'
@@ -49,20 +62,19 @@ X = tourism_dataset[numeric_features + categorical_features]
 # Define target variable
 y = tourism_dataset[target]
 
-
 # Split dataset into train and test
 # Split the dataset into training and test sets
 Xtrain, Xtest, ytrain, ytest = train_test_split(
     X, y,              # Predictors (X) and target variable (y)
-    test_size=0.2,     # 20% of the data is reserved for testing
-    random_state=42    # Ensures reproducibility by setting a fixed random seed
+    test_size=0.20,    # 20% of the data is reserved for testing
+    random_state=42,   # Ensures reproducibility by setting a fixed random seed
+    stratify=y         # preserves the same class distribution in both train and test datasets.
 )
 
 Xtrain.to_csv("Xtrain.csv",index=False)
 Xtest.to_csv("Xtest.csv",index=False)
 ytrain.to_csv("ytrain.csv",index=False)
 ytest.to_csv("ytest.csv",index=False)
-
 
 files = ["Xtrain.csv","Xtest.csv","ytrain.csv","ytest.csv"]
 

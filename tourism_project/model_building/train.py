@@ -2,14 +2,18 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
+
 # for model training, tuning, and evaluation
 import xgboost as xgb
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score, classification_report, recall_score
+
 # for model serialization
 import joblib
+
 # for creating a folder
 import os
+
 # for hugging face space authentication to upload files
 from huggingface_hub import login, HfApi, create_repo
 from huggingface_hub.utils import RepositoryNotFoundError, HfHubHTTPError
@@ -30,48 +34,30 @@ Xtest = pd.read_csv(Xtest_path)
 ytrain = pd.read_csv(ytrain_path)
 ytest = pd.read_csv(ytest_path)
 
-# Remove unnecessary columns
-unwanted_cols = ["Unnamed: 0", "CustomerID"]
-Xtrain = Xtrain.drop(columns=unwanted_cols, errors='ignore')
-Xtest = Xtest.drop(columns=unwanted_cols, errors='ignore')
-
-# Remove duplicates safely by combining X and y first
-## Train Data
-train_combined = pd.concat([Xtrain, ytrain], axis=1)
-train_combined = train_combined.drop_duplicates().reset_index(drop=True)
-Xtrain = train_combined.drop(columns=[ytrain.columns[0]])
-ytrain = train_combined[ytrain.columns[0]]
-
-## Test Data
-test_combined = pd.concat([Xtest, ytest], axis=1)
-test_combined = test_combined.drop_duplicates().reset_index(drop=True)
-Xtest = test_combined.drop(columns=[ytest.columns[0]])
-ytest = test_combined[ytest.columns[0]]
-
 # List of numerical features in the dataset
 numeric_features = [
-    'Age',     # Customer's age
-    'CityTier', # The city category based on development, population, and living standards (Tier 1 > Tier 2 > Tier 3)
-    'NumberOfPersonVisiting', # Total number of people accompanying the customer on the trip
-    'PreferredPropertyStar',  # Preferred hotel rating by the customer
-    'NumberOfTrips',     # Average number of trips the customer takes annually
+    'Age',                      # Customer's age
+    'CityTier',                 # The city category based on development, population, and living standards (Tier 1 > Tier 2 > Tier 3)
+    'NumberOfPersonVisiting',   # Total number of people accompanying the customer on the trip
+    'PreferredPropertyStar',    # Preferred hotel rating by the customer
+    'NumberOfTrips',            # Average number of trips the customer takes annually
     'NumberOfChildrenVisiting', # Number of children below age 5 accompanying the customer
-    'MonthlyIncome', # Gross monthly income of the customer
-    'PitchSatisfactionScore', # Score indicating the customer's satisfaction with the sales pitch
-    'NumberOfFollowups', # Total number of follow-ups by the salesperson after the sales pitch
-    'DurationOfPitch' # Duration of the sales pitch delivered to the customer
+    'MonthlyIncome',            # Gross monthly income of the customer
+    'PitchSatisfactionScore',   # Score indicating the customer's satisfaction with the sales pitch
+    'NumberOfFollowups',        # Total number of follow-ups by the salesperson after the sales pitch
+    'DurationOfPitch'           # Duration of the sales pitch delivered to the customer
 ]
 
 # List of categorical features in the dataset
 categorical_features = [
-    'TypeofContact', # The method by which the customer was contacted (Company Invited or Self Inquiry)
-    'Occupation', # Customer's occupation (e.g., Salaried, Freelancer)
-    'Gender', # Gender of the customer (Male, Female)
-    'MaritalStatus', # Marital status of the customer (Single, Married, Divorced)
-    'Designation', # Customer's designation in their current organization
+    'TypeofContact',  # The method by which the customer was contacted (Company Invited or Self Inquiry)
+    'Occupation',     # Customer's occupation (e.g., Salaried, Freelancer)
+    'Gender',         # Gender of the customer (Male, Female)
+    'MaritalStatus',  # Marital status of the customer (Single, Married, Divorced)
+    'Designation',    # Customer's designation in their current organization
     'ProductPitched', # The type of product pitched to the customer
-    'Passport', # Whether the customer holds a valid passport (0: No, 1: Yes)
-    'OwnCar' # Whether the customer owns a car (0: No, 1: Yes)
+    'Passport',       # Whether the customer holds a valid passport (0: No, 1: Yes)
+    'OwnCar'          # Whether the customer owns a car (0: No, 1: Yes)
 ]
 
 # Ensure lists only contain columns that actually exist after dropping unwanted ones
@@ -92,12 +78,12 @@ xgb_model = xgb.XGBClassifier(scale_pos_weight=class_weight, random_state=42)
 
 # Define hyperparameter grid
 param_grid = {
-    'xgbclassifier__n_estimators': [100, 200, 300],    # number of tree to build
-    'xgbclassifier__max_depth': [3, 5, 7],    # maximum depth of each tree
-    'xgbclassifier__colsample_bytree': [0.4, 0.5, 0.6],    # percentage of attributes to be considered (randomly) for each tree
-    'xgbclassifier__colsample_bylevel': [0.4, 0.5, 0.6],    # percentage of attributes to be considered (randomly) for each level of a tree
+    'xgbclassifier__n_estimators': [100, 200, 300],       # number of tree to build
+    'xgbclassifier__max_depth': [3, 5, 7],                # maximum depth of each tree
+    'xgbclassifier__colsample_bytree': [0.4, 0.5, 0.6],   # percentage of attributes to be considered (randomly) for each tree
+    'xgbclassifier__colsample_bylevel': [0.4, 0.5, 0.6],  # percentage of attributes to be considered (randomly) for each level of a tree
     'xgbclassifier__learning_rate': [0.01, 0.05, 0.1],    # learning rate
-    'xgbclassifier__reg_lambda': [0.4, 0.5, 0.6],    # L2 regularization factor
+    'xgbclassifier__reg_lambda': [0.4, 0.5, 0.6],         # L2 regularization factor
 }
 
 # Model pipeline
