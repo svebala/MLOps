@@ -76,3 +76,35 @@ The dataset consists of **customer demographics and interaction attributes** use
 * **Version Control**: Git & GitHub
 * **CI/CD Automation**: GitHub Actions
 * **MLOps Practices**: Automated training, testing, and deployment readiness
+
+## Project Structure
+
+```text
+.
+├── .github/
+│   └── workflows/
+│       └── pipeline.yml              # CI/CD pipeline for automated build, training, and deployment
+│
+├── tourism_project/
+│   ├── data/
+│   │   └── tourism.csv              # Source tourism package dataset
+│   │
+│   ├── deployment/
+│   │   ├── Dockerfile               # Docker image definition for application deployment
+│   │   ├── app.py                   # Streamlit/FastAPI application for predictions
+│   │   └── requirements.txt         # Deployment-specific dependencies
+│   │
+│   ├── hosting/
+│   │   └── hosting.py               # Model hosting and inference utilities
+│   │
+│   ├── model_building/
+│   │   ├── data_register.py         # Uploads dataset to Hugging Face Dataset Hub
+│   │   ├── prep.py                  # Data cleaning, deduplication, preprocessing, train-test split
+│   │   └── train.py                 # Model training, hyperparameter tuning, MLflow logging,
+│   │                                # model registration and Hugging Face upload
+│   │
+│   ├── requirements.txt             # Project dependencies for model development
+│   └── README.md                    # Project-specific documentation
+│
+└── README.md                        # Main project documentation
+```
