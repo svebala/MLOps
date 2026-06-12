@@ -163,7 +163,7 @@ with mlflow.start_run():
     repo_id = "BalaSVenkat/tourism-package-model"
     repo_type = "model"
 
-    # Step 1: Check if the space exists
+    # Check if the space exists
     try:
         api.repo_info(repo_id=repo_id, repo_type=repo_type)
         print(f"Space '{repo_id}' already exists. Using it.")

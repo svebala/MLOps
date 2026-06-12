@@ -20,9 +20,7 @@ st.write(
 )
 st.write("Please enter the customer details below.")
 
-# -----------------------------
 # Customer Details
-# -----------------------------
 Age = st.number_input("Age", min_value=18, max_value=100, value=30)
 
 TypeofContact = st.selectbox(
@@ -77,9 +75,8 @@ MonthlyIncome = st.number_input(
     min_value=5000, max_value=500000, value=50000
 )
 
-# -----------------------------
+
 # Interaction Details
-# -----------------------------
 PitchSatisfactionScore = st.slider(
     "Pitch Satisfaction Score",
     min_value=1, max_value=5, value=3
@@ -100,9 +97,7 @@ DurationOfPitch = st.number_input(
     min_value=1, max_value=120, value=15
 )
 
-# -----------------------------
 # Prepare input data
-# -----------------------------
 input_data = pd.DataFrame([{
     "Age": Age,
     "TypeofContact": TypeofContact,
