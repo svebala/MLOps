@@ -21,7 +21,6 @@ st.write(
 st.write("Please enter the customer details below.")
 
 # Customer Details
-Age = st.number_input("Age", min_value=18, max_value=100, value=30)
 TypeofContact = st.selectbox("Type of Contact",["Company Invited", "Self Inquiry"])
 CityTier = st.selectbox("City Tier", [1, 2, 3])
 Occupation = st.selectbox("Occupation",["Salaried", "Freelancer", "Small Business", "Large Business"])
@@ -35,6 +34,7 @@ OwnCar = st.selectbox("Owns a Car?", ["Yes", "No"])
 NumberOfChildrenVisiting = st.number_input("Number of Children Visiting",min_value=0, max_value=5, value=0)
 Designation = st.selectbox("Designation",["Executive", "Manager", "Senior Manager", "VP"])
 MonthlyIncome = st.number_input("Monthly Income",min_value=5000, max_value=500000, value=50000)
+AgeGroup = st.selectbox("Age Group",['18-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64'])
 
 
 # Interaction Details

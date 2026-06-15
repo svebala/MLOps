@@ -36,7 +36,6 @@ ytest = pd.read_csv(ytest_path)
 
 # List of numerical features in the dataset
 numeric_features = [
-    'Age',                      # Customer's age
     'CityTier',                 # The city category based on development, population, and living standards (Tier 1 > Tier 2 > Tier 3)
     'NumberOfPersonVisiting',   # Total number of people accompanying the customer on the trip
     'PreferredPropertyStar',    # Preferred hotel rating by the customer
@@ -56,6 +55,7 @@ categorical_features = [
     'MaritalStatus',  # Marital status of the customer (Single, Married, Divorced)
     'Designation',    # Customer's designation in their current organization
     'ProductPitched', # The type of product pitched to the customer
+    'AgeGroup',       # Age group of customer
     'Passport',       # Whether the customer holds a valid passport (0: No, 1: Yes)
     'OwnCar'          # Whether the customer owns a car (0: No, 1: Yes)
 ]
