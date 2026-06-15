@@ -66,7 +66,7 @@ tourism_dataset = tourism_dataset.drop_duplicates().reset_index(drop=True)
 print(f"Dataset shape after duplicate removals: {tourism_dataset.shape}")
 
 # Save Cleaned Dataset
-tourism_dataset.to_csv(cleaned_tourism.csv,index=False)
+tourism_dataset.to_csv("cleaned_tourism.csv",index=False)
 
 # Define the target variable for the classification task
 target = 'ProdTaken'
